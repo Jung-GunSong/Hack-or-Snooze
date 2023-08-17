@@ -25,7 +25,8 @@ class Story {
 
   getHostName() {
     // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    const hostName = this.url.split('//')
+    return hostName[1];
   }
 }
 
