@@ -73,8 +73,20 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
+  async addStory(user, newStory) {
     // UNIMPLEMENTED: complete this function!
+    console.log(`user is`, user);
+    const token = user.loginToken;
+    console.log(`user token is`, token);
+    const storySubmission = newStory;
+
+    const response = await fetch(`https://hack-or-snooze-v3.herokuapp.com/stories`, { method: "POST", body: JSON.stringify({
+      token,
+      story: storySubmission
+    }), headers: {"Content-Type":"application/json"} });
+
+    const data = await response.json();
+    console.log(data);
   }
 }
 
