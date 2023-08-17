@@ -60,9 +60,10 @@ async function handleStorySubmitForm(evt) {
   const url = $("#story-url").val();
 
   const story = await storyList.addStory(currentUser, { title, author, url });
-  generateStoryMarkup(story);
+  const storyElement = generateStoryMarkup(story);
   //TODO: Prepend to DOM using global constants
   // getAndShowStoriesOnStart();
+  $allStoriesList.prepend(storyElement);
   collapseForm();
 
 }
