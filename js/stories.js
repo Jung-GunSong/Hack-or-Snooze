@@ -82,13 +82,19 @@ function collapseForm() {
   $("#story-form").toggle('hidden');
 }
 
-function favoriteOrUnfavoriteStory(){
+//TODO: use getstory by id method
+function favoriteOrUnfavoriteStory(id){
   currentUser.favorites.some((story) => {
-  return story.storyId === Story.getStoryId(this);
+  return story.storyId === id;
   }) ? currentUser.removeFavorite(this) :
     currentUser.addFavorite(this);
 
 }
+
+//TODO: return id
+$allStoriesList.on('click', 'i', function(evt){
+  console.log($(evt.target).closest('li').attr("id"))
+})
 
 function createFavoritePage(){
 

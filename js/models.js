@@ -29,6 +29,7 @@ class Story {
     return hostName[1];
   }
 
+  //TODO: get a story based on an id
   getStoryId(){
     return this.storyId;
   }
