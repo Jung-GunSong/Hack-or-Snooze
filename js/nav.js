@@ -43,4 +43,5 @@ function navSubmitClick() {
   $("#story-form").toggle("hidden");
 }
 
+//TODO: make global variable for nav submit
 $("#nav-submit").on("click", navSubmitClick)

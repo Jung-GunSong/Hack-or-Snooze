@@ -59,9 +59,10 @@ async function handleStorySubmitForm(evt) {
   const title = $("#story-title").val();
   const url = $("#story-url").val();
 
-  await storyList.addStory(currentUser, { title, author, url });
-
-  getAndShowStoriesOnStart();
+  const story = await storyList.addStory(currentUser, { title, author, url });
+  generateStoryMarkup(story);
+  //TODO: Prepend to DOM using global constants
+  // getAndShowStoriesOnStart();
   collapseForm();
 
 }
@@ -69,7 +70,7 @@ async function handleStorySubmitForm(evt) {
 $("#story-form").on("submit", handleStorySubmitForm);
 
 /** Hide form on submission */
-
+//TODO: (later) reset form through jQuery trigger
 function collapseForm() {
   $("#story-author").val('');
   $("#story-title").val('');
