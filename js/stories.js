@@ -82,4 +82,14 @@ function collapseForm() {
   $("#story-form").toggle('hidden');
 }
 
-function favoriteOrUnfavoriteStory(){}
+function favoriteOrUnfavoriteStory(){
+  currentUser.favorites.some((story) => {
+  return story.storyId === Story.getStoryId(this);
+  }) ? currentUser.removeFavorite(this) :
+    currentUser.addFavorite(this);
+
+}
+
+function createFavoritePage(){
+
+}

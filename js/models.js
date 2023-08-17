@@ -28,6 +28,10 @@ class Story {
     const hostName = this.url.split('//');
     return hostName[1];
   }
+
+  getStoryId(){
+    return this.storyId;
+  }
 }
 
 
