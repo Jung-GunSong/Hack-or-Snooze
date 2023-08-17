@@ -230,11 +230,14 @@ class User {
     }
   }
 
+/** Add story to user's favorite list */
+
   async addFavorite(story){
     const userName = this.username;
     const storyId = story.storyId;
 
-    const response = await fetch(`${BASE_URL}/users/${userName}/favorites/${storyId}`, {method: "POST",
+    const response = await fetch(`${BASE_URL}/users/${userName}/favorites/${storyId}`,
+    {method: "POST",
     body: JSON.stringify({
       token: this.loginToken,
 
@@ -243,5 +246,26 @@ class User {
   });
   const data = await response.json();
   console.log(data);
+  }
+
+/** Remove story from user's favorite list */
+
+  async removeFavorite(story){
+    const userName = this.username;
+    const storyId = story.storyId;
+
+    const response = await fetch(`${BASE_URL}/users/${userName}/favorites/${storyId}`,
+    {
+      method: "DELETE",
+      body: JSON.stringify({
+        token: this.loginToken
+      }),
+      headers: {
+        "content-type": "application/json"
+      }
+  });
+  console.log('delete response=', response);
+  const data = await response.json();
+  console.log('delete data=', data);
   }
 }
