@@ -51,18 +51,28 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-/**  */
-
-$("#story-form").on("submit", handleStorySubmitForm)
+/** Gets value from form and adds new story to page */
 
 async function handleStorySubmitForm(evt) {
-  // evt.preventDefault();
+  // evt.preventDefault(); not necessary?
+  const author = $("#story-author").val();
+  const title = $("#story-title").val();
+  const url = $("#story-url").val();
 
-const author = $("#story-author").val();
-const title = $("#story-title").val();
-const url = $("#story-url").val();
+  await storyList.addStory(currentUser, { title, author, url });
 
-const newStory = await storyList.addStory(currentUser, {title, author, url});
-  $allStoriesList.append(newStory);
-  console.log("form was submitted");
+  getAndShowStoriesOnStart();
+  collapseForm();
+
+}
+
+$("#story-form").on("submit", handleStorySubmitForm);
+
+/** Hide form on submission */
+
+function collapseForm() {
+  $("#story-author").val('');
+  $("#story-title").val('');
+  $("#story-url").val('');
+  $("#story-form").toggle('hidden');
 }
