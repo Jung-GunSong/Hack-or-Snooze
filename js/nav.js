@@ -53,6 +53,7 @@ $navSubmit.on("click", navSubmitClick)
 function navFavoritesClick() {
   $allStoriesList.hide();
   $favoriteStoriesList.removeClass("hidden");
+  putStoriesOnFavorites();
 }
 
 $navFavorites.on("click", navFavoritesClick)

@@ -107,6 +107,17 @@ $allStoriesList.on('click', 'i', function(evt){
   favoriteOrUnfavoriteStory(targetedId);
 })
 
-function createFavoritePage(){
+function putStoriesOnFavorites() {
+  console.debug("putStoriesOnFavorites");
+
+  $favoriteStoriesList.empty();
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of currentUser.favorites) {
+    console.log(`favs of current user are`, currentUser.favorites);
+    console.log(`story is`, story);
+    const $story = generateStoryMarkup(story);
+    $favoriteStoriesList.append($story);
+  }
 
 }
