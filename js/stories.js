@@ -19,14 +19,15 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story) {
+function generateStoryMarkup(story, toggleFavorite=UNFAVORITE_CLASS) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+  //check story in currentuser.favorites, if favorite change togglefavorite
   return $(`
       <li id="${story.storyId}">
         <span>
-          <i class="bi bi-star"></i>
+          <i class="bi ${toggleFavorite}"></i>
         </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
@@ -64,11 +65,9 @@ async function handleStorySubmitForm(evt) {
 
   const story = await storyList.addStory(currentUser, { title, author, url });
   const storyElement = generateStoryMarkup(story);
-  //TODO: Prepend to DOM using global constants
-  // getAndShowStoriesOnStart();
+
   $allStoriesList.prepend(storyElement);
   collapseForm();
-
 }
 
 $("#story-form").on("submit", handleStorySubmitForm);
@@ -93,7 +92,7 @@ function favoriteOrUnfavoriteStory(id){
     currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites));
     console.log(`trying to remove from favorites`);
   }else {
-    currentUser.addFavorite(Story.getStoryById(id, currentUser.favorites));
+    currentUser.addFavorite(Story.getStoryById(id, storyList.stories));
     console.log(`trying to add to favorites`);
   }
 
@@ -103,8 +102,10 @@ function favoriteOrUnfavoriteStory(id){
 
 $allStoriesList.on('click', 'i', function(evt){
   const targetedId= $(evt.target).closest('li').attr("id");
-  console.log(`targetId is`, targetedId);
+  console.log(`target is`, $(evt.target));
   favoriteOrUnfavoriteStory(targetedId);
+  $(evt.target).toggleClass(`${UNFAVORITE_CLASS}`);
+  $(evt.target).toggleClass(`${FAVORITE_CLASS}`);
 })
 
 function putStoriesOnFavorites() {
@@ -116,8 +117,8 @@ function putStoriesOnFavorites() {
   for (let story of currentUser.favorites) {
     console.log(`favs of current user are`, currentUser.favorites);
     console.log(`story is`, story);
-    const $story = generateStoryMarkup(story);
-    $favoriteStoriesList.append($story);
+    const $story = generateStoryMarkup(story, FAVORITE_CLASS);
+    $favoriteStoriesList.prepend($story);
   }
 
 }
