@@ -49,6 +49,7 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     let $story = null;
+    //only check for favorite if currentuser is logged in
     if (checkIfFavorite(story)) {
       $story = generateStoryMarkup(story, FAVORITE_CLASS);
     } else {
