@@ -20,15 +20,12 @@ async function getAndShowStoriesOnStart() {
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story, toggleFavorite = UNFAVORITE_CLASS) {
+function generateStoryMarkup(story) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
-        <span>
-          <i class="bi ${toggleFavorite}"></i>
-        </span>
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
@@ -37,6 +34,10 @@ function generateStoryMarkup(story, toggleFavorite = UNFAVORITE_CLASS) {
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
+}
+
+function generateFavoritesMarkup(toggleFavorite){
+  return $(`<span><i class=" bi ${toggleFavorite}"></i></span>`);
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -48,15 +49,21 @@ function putStoriesOnPage() {
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
-    let $story = null;
-    //only check for favorite if currentuser is logged in
-    if (checkIfFavorite(story)) {
+
+    if (currentUser === undefined){
+      const $story = generateStoryMarkup(story);
+      $allStoriesList.append($story);
+    }else {
+      let $story = null;
+      if (checkIfFavorite(story)) {
       $story = generateStoryMarkup(story, FAVORITE_CLASS);
-    } else {
+      $allStoriesList.append($story);
+      } else {
       $story = generateStoryMarkup(story);
+      $allStoriesList.append($story);
+      }
     }
 
-    $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
