@@ -57,7 +57,7 @@ function putStoriesOnPage() {
 /** Gets value from form and adds new story to page */
 
 async function handleStorySubmitForm(evt) {
-  // evt.preventDefault(); not necessary?
+  evt.preventDefault();
   const author = $("#story-author").val();
   const title = $("#story-title").val();
   const url = $("#story-url").val();
