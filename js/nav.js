@@ -11,6 +11,7 @@ function navAllStories(evt) {
   evt.preventDefault();
   hidePageComponents();
   putStoriesOnPage();
+  $favoriteStoriesList.addClass("hidden");
 }
 
 $body.on("click", "#nav-all", navAllStories);
@@ -23,6 +24,8 @@ function navLoginClick(evt) {
   hidePageComponents();
   $loginForm.show();
   $signupForm.show();
+
+
 }
 
 $navLogin.on("click", navLoginClick);
@@ -40,8 +43,16 @@ function updateNavOnLogin() {
 /** Show story submit form when user clicks story nav link  */
 
 function navSubmitClick() {
-  $("#story-form").toggle("hidden");
+  $storyForm.toggle("hidden");
 }
 
-//TODO: make global variable for nav submit
-$("#nav-submit").on("click", navSubmitClick)
+$navSubmit.on("click", navSubmitClick)
+
+/** Hides all stories and shows favorite stories */
+
+function navFavoritesClick() {
+  $allStoriesList.hide();
+  $favoriteStoriesList.removeClass("hidden");
+}
+
+$navFavorites.on("click", navFavoritesClick)
