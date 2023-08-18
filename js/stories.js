@@ -15,11 +15,12 @@ async function getAndShowStoriesOnStart() {
 /**
  * A render method to render HTML for an individual Story instance
  * - story: an instance of Story
- * - toggleFavorite: defines which emoji exists next to our story based on whether it is is favorite story or not
+ * - toggleFavorite: defines which emoji exists next to our story based on
+ *     whether it is is favorite story or not
  * Returns the markup for the story.
  */
 
-function generateStoryMarkup(story, toggleFavorite=UNFAVORITE_CLASS) {
+function generateStoryMarkup(story, toggleFavorite = UNFAVORITE_CLASS) {
   // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
@@ -48,9 +49,9 @@ function putStoriesOnPage() {
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     let $story = null;
-    if (checkIfFavorite(story)){
+    if (checkIfFavorite(story)) {
       $story = generateStoryMarkup(story, FAVORITE_CLASS);
-    }else {
+    } else {
       $story = generateStoryMarkup(story);
     }
 
@@ -75,12 +76,12 @@ async function handleStorySubmitForm(evt) {
   collapseForm();
 }
 
- /** event listener for submit form button */
+/** event listener for submit form button */
 
 $("#story-form").on("submit", handleStorySubmitForm);
 
-/** Hide form on submission */
-//TODO: (later) reset form through jQuery trigger
+/** Hide and reset form on submission */
+//(later) reset form through jQuery trigger??
 function collapseForm() {
   $("#story-author").val('');
   $("#story-title").val('');
@@ -88,30 +89,32 @@ function collapseForm() {
   $("#story-form").toggle('hidden');
 }
 
-/** takes in a story's id and determines whether to add the story to the user's favorites or to remove it from there */
+/** takes in a story's id and determines whether to add the story to the user's
+ * favorites or to remove it from there */
 
-function favoriteOrUnfavoriteStory(id){
-  if (currentUser.favorites.some((story) => {
-  return story.storyId === id; //don't put too much stuff in if statement
-  })){
-    currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites));
-    console.log(`trying to remove from favorites`);
-  }else {
-    currentUser.addFavorite(Story.getStoryById(id, storyList.stories));
-    console.log(`trying to add to favorites`);
-  }
+function favoriteOrUnfavoriteStory(id) {
+  console.debug("favoriteOrUnfavorite")
 
+  const isFavorite = currentUser.favorites.some((story) => {
+    return story.storyId === id;
+  });
+
+  isFavorite
+  ? currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites))
+  : currentUser.addFavorite(Story.getStoryById(id, storyList.stories));
 
 }
 
-/** event listener change emoji next to story's DOM to show whether it has been declared a favorite story or not */
+/** event listener change emoji next to story's DOM to show whether it has been
+ * declared a favorite story or not */
 
-$allStoriesList.on('click', 'i', function(evt){
-  const targetedId= $(evt.target).closest('li').attr("id");
+$allStoriesList.on('click', 'i', function (evt) {
+  const targetedId = $(evt.target).closest('li').attr("id");
   favoriteOrUnfavoriteStory(targetedId);
+
   $(evt.target).toggleClass(`${UNFAVORITE_CLASS}`);
   $(evt.target).toggleClass(`${FAVORITE_CLASS}`);
-})
+});
 
 /** generates the user's favorite stories on to the DOM  */
 
@@ -128,22 +131,24 @@ function putStoriesOnFavorites() {
 
 }
 
-/** event listener to allow user to click on the emoji to either favorite or unfavorite a story in the favorite story page*/
+/** event listener to allow user to click on the emoji to either favorite or
+ *  unfavorite a story in the favorite story page*/
 
-$favoriteStoriesList.on('click', 'i', function(evt){
-  const targetedId= $(evt.target).closest('li').attr("id");
-  console.log(`The star' story id is`,targetedId);
+$favoriteStoriesList.on('click', 'i', function (evt) {
+  const targetedId = $(evt.target).closest('li').attr("id");
   favoriteOrUnfavoriteStory(targetedId);
+
   $(evt.target).toggleClass(`${UNFAVORITE_CLASS}`);
   $(evt.target).toggleClass(`${FAVORITE_CLASS}`);
-})
+});
 
-/** takes in the story object return whether the story is included in the user's favorites or not */
+/** takes in the story object return whether the story is included in the user's
+ *  favorites or not */
 
-  function checkIfFavorite(story){
-    const currentStoryId = story.storyId;
-    if (currentUser.favorites.some((story) => {
-      return story.storyId === currentStoryId; //don't put too much stuff in if statement
-      })) return true
-      return false;
-  }
+function checkIfFavorite(story) {
+  const currentStoryId = story.storyId;
+  return currentUser.favorites.some((story) => {
+    return story.storyId === currentStoryId;
+  })
+
+}
