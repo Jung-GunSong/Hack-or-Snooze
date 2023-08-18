@@ -253,7 +253,10 @@ class User {
   });
   const data = await response.json();
   console.log(data);
-  this.favorites = data.user.favorites;
+  //take data {message, user: {favorites: [stories]}} data.user.favorites
+  //make sure each item is an instance of Story
+  // this.favorites = data.user.favorites;
+  this.favorites = data.user.favorites.map(s => new Story(s));
   }
 
 /** Remove story from user's favorite list */
@@ -275,6 +278,6 @@ class User {
   console.log('delete response=', response);
   const data = await response.json();
   console.log('delete data=', data);
-  this.favorites = data.user.favorites;
+  this.favorites = data.user.favorites.map(s => new Story(s));
   }
 }
