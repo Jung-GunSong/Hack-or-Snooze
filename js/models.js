@@ -24,14 +24,14 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // TODO: URL class instance to acceess host name
-    const hostName = this.url.split('//');
-    return hostName[1];
+    const url = new URL(this.url);
+    return url.hostname;
   }
 
+  /** Given an id and list of stories, return story from list that matches id */
 
-  static  getStoryById(id, listOfStories){
-    for (let story of listOfStories){
+  static getStoryById(id, listOfStories) {
+    for (let story of listOfStories) {
       if (story.storyId === id) return story;
     }
   }
@@ -237,47 +237,45 @@ class User {
     }
   }
 
-/** Add story to user's favorite list */
+  /** Add story to user's favorite list */
 
-  async addFavorite(story){
+  async addFavorite(story) {
     const userName = this.username;
     const storyId = story.storyId;
 
     const response = await fetch(`${BASE_URL}/users/${userName}/favorites/${storyId}`,
-    {method: "POST",
-    body: JSON.stringify({
-      token: this.loginToken,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          token: this.loginToken,
 
-    }),
-    headers: {"content-type": "application/json"}
-  });
-  const data = await response.json();
-  console.log(data);
-  //take data {message, user: {favorites: [stories]}} data.user.favorites
-  //make sure each item is an instance of Story
-  // this.favorites = data.user.favorites;
-  this.favorites = data.user.favorites.map(s => new Story(s));
+        }),
+        headers: { "content-type": "application/json" }
+      });
+    const data = await response.json();
+
+    this.favorites = data.user.favorites.map(s => new Story(s));
   }
 
-/** Remove story from user's favorite list */
+  /** Remove story from user's favorite list */
 
-  async removeFavorite(story){
+  async removeFavorite(story) {
     const userName = this.username;
     const storyId = story.storyId;
 
     const response = await fetch(`${BASE_URL}/users/${userName}/favorites/${storyId}`,
-    {
-      method: "DELETE",
-      body: JSON.stringify({
-        token: this.loginToken
-      }),
-      headers: {
-        "content-type": "application/json"
-      }
-  });
-  console.log('delete response=', response);
-  const data = await response.json();
-  console.log('delete data=', data);
-  this.favorites = data.user.favorites.map(s => new Story(s));
+      {
+        method: "DELETE",
+        body: JSON.stringify({
+          token: this.loginToken
+        }),
+        headers: {
+          "content-type": "application/json"
+        }
+      });
+
+    const data = await response.json();
+
+    this.favorites = data.user.favorites.map(s => new Story(s));
   }
 }
