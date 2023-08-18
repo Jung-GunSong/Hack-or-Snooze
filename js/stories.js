@@ -82,18 +82,29 @@ function collapseForm() {
   $("#story-form").toggle('hidden');
 }
 
-//TODO: use getstory by id method
+
 function favoriteOrUnfavoriteStory(id){
-  currentUser.favorites.some((story) => {
+  console.log(`arg id is`, id);
+  console.log(`favs of currentUser are`, currentUser.favorites);
+  console.log(`a story id of a story in favs`, currentUser.favorites[0].storyId);
+  if (currentUser.favorites.some((story) => {
   return story.storyId === id;
-  }) ? currentUser.removeFavorite(this) :
-    currentUser.addFavorite(this);
+  })){
+    currentUser.removeFavorite(Story.getStoryById(id));
+    console.log(`trying to remove from favorites`);
+  }else {
+    currentUser.addFavorite(Story.getStoryById(id));
+    console.log(`trying to add to favorites`);
+  }
+
 
 }
 
-//TODO: return id
+
 $allStoriesList.on('click', 'i', function(evt){
-  console.log($(evt.target).closest('li').attr("id"))
+  const targetedId= $(evt.target).closest('li').attr("id");
+  console.log(`targetId is`, targetedId);
+  favoriteOrUnfavoriteStory(targetedId);
 })
 
 function createFavoritePage(){

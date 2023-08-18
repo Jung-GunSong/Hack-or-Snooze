@@ -29,9 +29,11 @@ class Story {
     return hostName[1];
   }
 
-  //TODO: get a story based on an id
-  getStoryId(){
-    return this.storyId;
+
+  static  getStoryById(id){
+    for (let story of storyList.stories){
+      if (story.storyId === id) return story;
+    }
   }
 }
 
@@ -251,6 +253,7 @@ class User {
   });
   const data = await response.json();
   console.log(data);
+  this.favorites = data.user.favorites;
   }
 
 /** Remove story from user's favorite list */
@@ -272,5 +275,6 @@ class User {
   console.log('delete response=', response);
   const data = await response.json();
   console.log('delete data=', data);
+  this.favorites = data.user.favorites;
   }
 }
