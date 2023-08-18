@@ -88,12 +88,12 @@ function favoriteOrUnfavoriteStory(id){
   console.log(`favs of currentUser are`, currentUser.favorites);
   console.log(`a story id of a story in favs`, currentUser.favorites[0].storyId);
   if (currentUser.favorites.some((story) => {
-  return story.storyId === id;
+  return story.storyId === id; //don't put too much stuff in if statement
   })){
-    currentUser.removeFavorite(Story.getStoryById(id));
+    currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites));
     console.log(`trying to remove from favorites`);
   }else {
-    currentUser.addFavorite(Story.getStoryById(id));
+    currentUser.addFavorite(Story.getStoryById(id, currentUser.favorites));
     console.log(`trying to add to favorites`);
   }
 
@@ -121,3 +121,9 @@ function putStoriesOnFavorites() {
   }
 
 }
+
+$favoriteStoriesList.on('click', 'i', function(evt){
+  const targetedId= $(evt.target).closest('li').attr("id");
+  console.log(`The star' story id is`,targetedId);
+  favoriteOrUnfavoriteStory(targetedId);
+})

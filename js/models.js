@@ -30,8 +30,8 @@ class Story {
   }
 
 
-  static  getStoryById(id){
-    for (let story of storyList.stories){
+  static  getStoryById(id, listOfStories){
+    for (let story of listOfStories){
       if (story.storyId === id) return story;
     }
   }
