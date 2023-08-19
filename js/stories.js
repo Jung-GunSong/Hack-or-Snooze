@@ -15,8 +15,7 @@ async function getAndShowStoriesOnStart() {
 /**
  * A render method to render HTML for an individual Story instance
  * - story: an instance of Story
- * - toggleFavorite: defines which emoji exists next to our story based on
- *     whether it is is favorite story or not
+ *
  * Returns the markup for the story.
  */
 
@@ -36,8 +35,22 @@ function generateStoryMarkup(story) {
     `);
 }
 
-function generateFavoritesMarkup(toggleFavorite){
-  return $(`<span><i class=" bi ${toggleFavorite}"></i></span>`);
+/** Return markup for favorite icons */
+
+function generateFavoritesMarkup(toggleFavorite = UNFAVORITE_CLASS) {
+  return $(`<span>
+              <i class=" bi ${toggleFavorite}"></i>
+            </span>`);
+}
+
+/** Add favorite icons to page */
+
+function putFavoriteIconsOnPage(listOfStories) {
+  for (let story of listOfStories) {
+    checkIfFavorite(story)
+      ? $(`#${story.storyId}`).prepend(generateFavoritesMarkup(FAVORITE_CLASS))
+      : $(`#${story.storyId}`).prepend(generateFavoritesMarkup(UNFAVORITE_CLASS));
+  }
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
@@ -49,24 +62,12 @@ function putStoriesOnPage() {
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
-
-    if (currentUser === undefined){
-      const $story = generateStoryMarkup(story);
-      $allStoriesList.append($story);
-    }else {
-      let $story = null;
-      if (checkIfFavorite(story)) {
-      $story = generateStoryMarkup(story, FAVORITE_CLASS);
-      $allStoriesList.append($story);
-      } else {
-      $story = generateStoryMarkup(story);
-      $allStoriesList.append($story);
-      }
-    }
-
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
   }
 
   $allStoriesList.show();
+  putFavoriteIconsOnPage(storyList.stories);
 }
 
 /** Gets value from form and adds new story to page */
@@ -101,15 +102,15 @@ function collapseForm() {
  * favorites or to remove it from there */
 
 function favoriteOrUnfavoriteStory(id) {
-  console.debug("favoriteOrUnfavorite")
+  console.debug("favoriteOrUnfavorite");
 
   const isFavorite = currentUser.favorites.some((story) => {
     return story.storyId === id;
   });
 
   isFavorite
-  ? currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites))
-  : currentUser.addFavorite(Story.getStoryById(id, storyList.stories));
+    ? currentUser.removeFavorite(Story.getStoryById(id, currentUser.favorites))
+    : currentUser.addFavorite(Story.getStoryById(id, storyList.stories));
 
 }
 
@@ -133,10 +134,11 @@ function putStoriesOnFavorites() {
 
   // loop through all of our stories and generate HTML for them
   for (let story of currentUser.favorites) {
-    const $story = generateStoryMarkup(story, FAVORITE_CLASS);
+    const $story = generateStoryMarkup(story);
     $favoriteStoriesList.prepend($story);
   }
 
+  putFavoriteIconsOnPage(currentUser.favorites);
 }
 
 /** event listener to allow user to click on the emoji to either favorite or
@@ -157,6 +159,6 @@ function checkIfFavorite(story) {
   const currentStoryId = story.storyId;
   return currentUser.favorites.some((story) => {
     return story.storyId === currentStoryId;
-  })
+  });
 
 }
