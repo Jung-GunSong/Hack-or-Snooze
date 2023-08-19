@@ -38,15 +38,19 @@ function generateStoryMarkup(story) {
 /** Return markup for favorite icons */
 
 function generateFavoritesMarkup(toggleFavorite = UNFAVORITE_CLASS) {
+  console.log('ran generate favorites')
   return $(`<span>
-              <i class=" bi ${toggleFavorite}"></i>
+              <i class="bi ${toggleFavorite}"></i>
             </span>`);
 }
 
 /** Add favorite icons to page */
 
 function putFavoriteIconsOnPage(listOfStories) {
+  console.log("put favorite icons on page")
+  console.log(listOfStories[0])
   for (let story of listOfStories) {
+    console.log('check if favorite', checkIfFavorite(story))
     checkIfFavorite(story)
       ? $(`#${story.storyId}`).prepend(generateFavoritesMarkup(FAVORITE_CLASS))
       : $(`#${story.storyId}`).prepend(generateFavoritesMarkup(UNFAVORITE_CLASS));
@@ -59,7 +63,7 @@ function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
-
+console.log("storylist=", storyList.stories)
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
@@ -131,13 +135,14 @@ function putStoriesOnFavorites() {
   console.debug("putStoriesOnFavorites");
 
   $favoriteStoriesList.empty();
-
+console.log("currentUSer favorites=", currentUser.favorites);
   // loop through all of our stories and generate HTML for them
   for (let story of currentUser.favorites) {
     const $story = generateStoryMarkup(story);
     $favoriteStoriesList.prepend($story);
   }
 
+  $favoriteStoriesList.show();
   putFavoriteIconsOnPage(currentUser.favorites);
 }
 
